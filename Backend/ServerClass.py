@@ -1,1 +1,3 @@
-import sqlite3 as sql
+import sqlite3 as database
+
+class ServerClass():

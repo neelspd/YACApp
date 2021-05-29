@@ -5,22 +5,30 @@ Created on Sat May  8 15:25:09 2021
 @author: Neel Shah
 """
 
-import flask
+import asyncio
+import threading
+import time
+import Backend.ServerClass as Server
 
-app = flask.Flask(__name__, static_url_path='', static_folder='Frontend/static', template_folder='Frontend/templates')
-
-@app.route('/yacapp', methods=['GET'])
-def retrunSitemap():
-    return app.send_static_file('sitemap.html')
-
-
-@app.route('/', methods=['GET'])
-def home():
-    return "Its Working, move on jackass"
+try:
+    from kivy.core.clipboard import Clipboard
+except:
+    pass
 
 
-@app.route('/logout')
-def logout():
-    return flask.redirect(flask.url_for('/yacapp'))
+ServerEvent = asyncio.get_event_loop()
 
-app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+ClientConnection = ServerEvent.create_server(Server, '0.0.0.0', 5000)
+StartServer = ServerEvent.run_until_complete(ClientConnection)
+
+# Serve requests until Ctrl+C is pressed
+#print('Serving on {}'.format(StartServer.sockets[0].getsockname()))
+#try:
+    #threading.Thread(target=are_you_ok).start()
+    #ServerEvent.run_forever()
+#except KeyboardInterrupt:
+#    pass
+
+StartServer.close()
+ServerEvent.run_until_complete(StartServer.wait_closed())
+ServerEvent.close()
