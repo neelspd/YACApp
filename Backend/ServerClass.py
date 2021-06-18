@@ -4,6 +4,7 @@ import threading
 import time
 #import cryptography as crypt
 import os
+import datetime
 
 #SB
 #from pprint import pprint
@@ -81,34 +82,47 @@ class InterruptionManagementClass:
 
 
 class ServerClass:
-    SendQuery = """ """
-    RecieveQuery = """ """
-    def __init__(self, sender, receiver, message, datetime):
-        self.sender = sender
-        self.receiver = receiver
-        self.message = message
-        self.datetime 
-
-
-    def sendMessages(self):
-        db = DatabaseConnection("C:/Users/Neel Shah/Desktop/Personal-Projects/YACApp/DB/YACApp.db")
-        if db.connectToDatabase():
-            message=()
-
-            if db.disconnectDatabase():
-                del db
+    def sendMessages(self, sender, receiver, message):
+        SendQuery = """ INSERT INTO Chat (Sender, Receiver, Message, DateTime) VALUES (?, ?, ?, ?); """
+        Server = DatabaseConnection("C:/Users/Neel Shah/Desktop/Personal-Projects/YACApp/DB/YACApp.db")
+        if Server.connectToDatabase():
+            MessageWriter = Server.connection.cursor()
+            message=(sender, receiver, message, datetime.datetime.now())
+            MessageWriter.execute(SendQuery, message)
+            Server.connection.commit()
+            print("Message Sent to " + receiver + " Sucessfully")
+            if Server.disconnectDatabase():
+                del Server
                 return 1
             else:
-                del db
+                del Server
                 return 0
 
-    def receiveMessages(self):
-        return 0
+    def receiveMessages(self, receiver):
+        RecieveQuery = """ select * from Chat where Receiver = ? """
+        Server = DatabaseConnection("C:/Users/Neel Shah/Desktop/Personal-Projects/YACApp/DB/YACApp.db")
+        if Server.connectToDatabase():
+            MessageReader = Server.connection.cursor()
+            MessageReader.execute(RecieveQuery, (receiver,))
+            messages = MessageReader.fetchall()
+            print("All Messages for " + receiver + " Loaded Sucessfully")
+            for row in messages:
+                print("Sender: ", row[0])
+                print("Date Time Stamp: ", row[3])
+                print("Message: ", row[2])
+                print(" \n")
+            if Server.disconnectDatabase():
+                del Server
+                return 1
+            else:
+                del Server
+                return 0
 
     def __del__ (self):
         print("Object of class " + __class__.__name__ + " freed")
 
 if __name__ == '__main__':
     server = ServerClass()
-    #checkCalender()
-    print("ServerClass = " + str(server.sendMessages()))
+    print("ServerClass = " + str(server.receiveMessages("receiver")))
+    #print("ServerClass = " + str(server.sendMessages("sender3", "receiver", """ sample message one
+    #    new line """)))
