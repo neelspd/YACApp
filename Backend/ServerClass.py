@@ -29,6 +29,7 @@ class DatabseConnection:
         try:
             self.connection.close()
             print("Database Connection Disconnected")
+            self.connection = None
         except database.Error as e:
             print(e)
         finally:
