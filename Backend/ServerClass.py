@@ -5,9 +5,12 @@ import time
 #import cryptography as crypt
 import os
 
+#SB
+#from pprint import pprint
+#//from Google import Create_Service
 
 
-class DatabseConnection:
+class DatabaseConnection:
     connection = None
 # add fully qualified file path as string between double quotes
     def __init__(self, filepath):
@@ -52,17 +55,46 @@ class ServerConnectionClass:
     def reconnectToClient(self):
         return 0
 
+# Here freeing objects allocated of the DatabaseConnection and ServerClass
+    def disconnectServer(self):
+        return 0
+
 
 class InterruptionManagementClass:
     def checkCalender(self):
+
+        #SB
+        #CLIENT_SECRET_FILE = 'client_secret.json'
+        #API_NAME = 'calendar'
+        #API_VERSION = 'v3'
+        #SCOPES = ['https://www.googleapis.com/auth/calendar']
+        #service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
+
+        #from apiclient.discovery import build
+        #from google_auth_oauthlib.flow import InstalledAppFlow
+
+        #scopes = ['https://www.googleapis.com/auth/calendar']
+        #flow = InstalledAppFlow.from_client_secrets_file("C:/Users/Neel Shah/Desktop/Personal-Projects/YACApp/Backend/client_secret.json", scope=scopes)
+        #flow.run_console
+
         return 0
 
 
 class ServerClass:
+    SendQuery = """ """
+    RecieveQuery = """ """
+    def __init__(self, sender, receiver, message, datetime):
+        self.sender = sender
+        self.receiver = receiver
+        self.message = message
+        self.datetime 
+
+
     def sendMessages(self):
-        db = DatabseConnection("C:/Users/Neel Shah/Desktop/Personal-Projects/YACApp/DB/YACApp.db")
+        db = DatabaseConnection("C:/Users/Neel Shah/Desktop/Personal-Projects/YACApp/DB/YACApp.db")
         if db.connectToDatabase():
-            print("inside send logic")
+            message=()
+
             if db.disconnectDatabase():
                 del db
                 return 1
@@ -73,6 +105,10 @@ class ServerClass:
     def receiveMessages(self):
         return 0
 
+    def __del__ (self):
+        print("Object of class " + __class__.__name__ + " freed")
+
 if __name__ == '__main__':
     server = ServerClass()
-    print("sendMessages " + str(server.sendMessages()))
+    #checkCalender()
+    print("ServerClass = " + str(server.sendMessages()))
